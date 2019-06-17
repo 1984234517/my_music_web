@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
 
     <link href="{{ url_for('static',filename='css/global.css') }}" rel="stylesheet" type="text/css">
-   	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}"/>
+   	<link rel="stylesheet" tcarsype="text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}"/>
     <link href="{{ url_for('static',filename='css/music.css') }}" rel="stylesheet" type="text/css">
     <title>音乐</title>
     <script type="text/javascript" src="{{ url_for('static',filename='js/jquery-2.1.0.js') }}" ></script>
@@ -33,8 +33,8 @@
 <body style="background:#999">
 <div class="search">
         <form>
-            <select name="cars" class="select">
-<option value="网易云音乐" selected = "selected">网易云音乐</option>
+            <select name="select_id" class="select" id="select_id">
+<option value="网易云音乐">网易云音乐</option>
 <option value="qq音乐">qq音乐</option>
             </select>
             <input type="text" placeholder="请输入你要查询的内容" class="key" name="query_value">
@@ -120,13 +120,22 @@
         var query_value = document.getElementsByTagName('input')[0];
         var butt = document.getElementsByTagName('button')[0];
         butt.onclick = function () {
+            var song_type = document.getElementById('select_id').value
             if (query_value.value != ''){
                 alert(query_value.value)
-                $.get('/index/search', {'query_value': query_value.value},function (data) {
+                $.get('/index/search', {'query_value': query_value.value,'type':song_type},function (data) {
                 if (data.data != ''){
+                    if (data.statu == 1){
                     song_list = []
                     for(i=0;i<data.data.length;i++){
                         song_list[i] = {songSheet:"我的歌单",name:data.data[i].song_name,src:"http://music.163.com/song/media/outer/url?id="+data.data[i].song_id,author:data.data[i].songer}
+                    }
+                    }
+                    else{
+                        song_list = []
+                    for(i=0;i<data.data.length;i++){
+                        song_list[i] = {songSheet:"我的歌单",name:data.data[i].song_name,src:data.data[i].song_url,author:data.data[i].songer}
+                    }
                     }
                        var para={
 		 t_time:"",  //音乐文件播放总时间
